@@ -462,17 +462,18 @@ summary {
     }
     
     mean(values, na.rm = TRUE)
+   
 }</code></pre>
 <p>Output examples:</p>
 <pre class="r"><code>pollutant(&quot;specdata&quot;, &quot;sulfate&quot;, 1:10)</code></pre>
 <pre><code>## [1] 4.064128</code></pre>
 <pre class="r"><code>## [1] 4.064128</code></pre>
-<pre class="r"><code>#pmean(&quot;specdata&quot;, &quot;sulfate&quot;, 55)
-
-## [1] 3.587319</code></pre>
-<pre class="r"><code>#pmean(&quot;specdata&quot;, &quot;nitrate&quot;)
-
-## [1] 1.702932</code></pre>
+<pre class="r"><code>pollutant(&quot;./specdata/&quot;, &quot;sulfate&quot;, 55)</code></pre>
+<pre><code>## [1] 3.587319</code></pre>
+<pre class="r"><code>## [1] 3.587319</code></pre>
+<pre class="r"><code>pollutant(&quot;./specdata/&quot;, &quot;nitrate&quot;)</code></pre>
+<pre><code>## [1] 1.702932</code></pre>
+<pre class="r"><code>## [1] 1.702932</code></pre>
 </div>
 <div id="part-2" class="section level2">
 <h2>Part 2</h2>
@@ -491,23 +492,50 @@ summary {
     # ...
     # where &#39;id&#39; is the monitor number and &#39;nobs&#39; is the
     # number of complete cases
+    fileList &lt;- list.files(path = directory, pattern =&quot;.csv&quot;, full.names = TRUE)
+    
+    nobs &lt;- numeric()
+    
+    for (i in id){
+        data &lt;- read.csv(fileList[i])
+        nobs &lt;- c(nobs, sum(complete.cases(data)))
+    }
+    
+    data.frame(id, nobs)
 }</code></pre>
 <p>Output examples:</p>
-<pre class="r"><code>#complete(&quot;specdata&quot;, 1)
-
-##   id nobs
+<pre class="r"><code>complete(&quot;specdata&quot;, 1)</code></pre>
+<pre><code>##   id nobs
 ## 1  1  117</code></pre>
-<pre class="r"><code>#complete(&quot;specdata&quot;, c(2, 4, 8, 10, 12))
-
-##   id nobs
+<pre class="r"><code>##   id nobs
+## 1  1  117</code></pre>
+<pre class="r"><code>complete(&quot;specdata&quot;, c(2, 4, 8, 10, 12))</code></pre>
+<pre><code>##   id nobs
 ## 1  2 1041
 ## 2  4  474
 ## 3  8  192
 ## 4 10  148
 ## 5 12   96</code></pre>
-<pre class="r"><code>#complete(&quot;specdata&quot;, 50:60)
-
-##   id nobs
+<pre class="r"><code>##   id nobs
+## 1  2 1041
+## 2  4  474
+## 3  8  192
+## 4 10  148
+## 5 12   96</code></pre>
+<pre class="r"><code>complete(&quot;specdata&quot;, 50:60)</code></pre>
+<pre><code>##    id nobs
+## 1  50  459
+## 2  51  193
+## 3  52  812
+## 4  53  342
+## 5  54  219
+## 6  55  372
+## 7  56  642
+## 8  57  452
+## 9  58  391
+## 10 59  445
+## 11 60  448</code></pre>
+<pre class="r"><code>##   id nobs
 ## 1  50  459
 ## 2  51  193
 ## 3  52  812
@@ -523,39 +551,51 @@ summary {
 <div id="part-3" class="section level2">
 <h2>Part 3</h2>
 <p>Write a function that takes a directory of data files and a threshold for complete cases and calculates the correlation between sulfate and nitrate for monitor locations where the number of completely observed cases (on all variables) is greater than the threshold. The function should return a vector of correlations for the monitors that meet the threshold requirement. If no monitors meet the threshold requirement, then the function should return a numeric vector of length 0. A prototype of this function follows</p>
-<pre class="r"><code>corr &lt;- function(directory, threshold = 0) {
-    # &#39;directory&#39; is character vector of length 1 
-    # indicating the location of the csv file.
-    
-    # &#39;threshold&#39; is numeric vector of length 1 indicating
-    # the number of completely observed observations (on all
-    # variables) required to compute the correlation between
-    # nitrate and sulfate; the default is 0
-    
-    # Return a numeric vector of correlations
-    # NOTE: do not round the result!
+<pre class="r"><code>require(data.table)
+
+#solution without loops
+corr &lt;- function(directory, threshold = 0) {
+   
+      # build a large data.table with the data from files
+      fileList &lt;- lapply(file.path(directory, list.files(path = directory, pattern=&quot;*.csv&quot;)), data.table::fread)
+      data &lt;- rbindlist(fileList)
+      
+      # keep only complete cases
+      data &lt;- data[complete.cases(data),]
+      
+      # Apply threshold
+      data &lt;- data[, .(nobs = .N, corr = cor(x = sulfate, y = nitrate)), by = ID][nobs &gt; threshold]
+      return(data[, corr])
+
 }</code></pre>
 <p>For this function you will need to use the ‘cor’ function in R which calculates the correlation between two vectors. Please read the help page for this function via ‘?cor’ and make sure that you know how to use it.</p>
 <p>Output examples:</p>
-<pre class="r"><code>#cr &lt;- corr(&quot;specdata&quot;, 150)
+<pre class="r"><code>cr &lt;- corr(&quot;specdata&quot;, 150)
 
-#head(cr); summary(cr)
-
-## [1] -0.01895754 -0.14051254 -0.04389737 -0.06815956 -0.12350667 -0.07588814
+head(cr); summary(cr)</code></pre>
+<pre><code>## [1] -0.01895754 -0.14051254 -0.04389737 -0.06815956 -0.12350667 -0.07588814</code></pre>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -0.21057 -0.04999  0.09463  0.12525  0.26844  0.76313</code></pre>
+<pre class="r"><code>## [1] -0.01895754 -0.14051254 -0.04389737 -0.06815956 -0.12350667 -0.07588814
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ## -0.21060 -0.04999  0.09463  0.12530  0.26840  0.76310</code></pre>
-<pre class="r"><code>#cr &lt;- corr(&quot;specdata&quot;, 400)
+<pre class="r"><code>cr &lt;- corr(&quot;specdata&quot;, 400)
 
-#head(cr); summary(cr)
-
-## [1] -0.01895754 -0.04389737 -0.06815956 -0.07588814  0.76312884 -0.15782860
+head(cr); summary(cr)</code></pre>
+<pre><code>## [1] -0.01895754 -0.04389737 -0.06815956 -0.07588814  0.76312884 -0.15782860</code></pre>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -0.17623 -0.03109  0.10021  0.13969  0.26849  0.76313</code></pre>
+<pre class="r"><code>## [1] -0.01895754 -0.04389737 -0.06815956 -0.07588814  0.76312884 -0.15782860
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ## -0.17620 -0.03109  0.10020  0.13970  0.26850  0.76310</code></pre>
-<pre class="r"><code>#cr &lt;- corr(&quot;specdata&quot;, 5000)
+<pre class="r"><code>cr &lt;- corr(&quot;specdata&quot;, 5000)
 
-#head(cr); summary(cr) ; length(cr)
-
-## NULL
+head(cr); summary(cr) ; length(cr)</code></pre>
+<pre><code>## numeric(0)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## </code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>## NULL
 ## Length  Class   Mode 
 ##      0   NULL   NULL
 ## [1] 0</code></pre>

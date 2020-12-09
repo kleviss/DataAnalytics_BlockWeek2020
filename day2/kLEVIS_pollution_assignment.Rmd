@@ -85,7 +85,7 @@ pollutant("./specdata/", "nitrate")
 Write a function that reads a directory full of files and reports the number of completely observed cases in each data file. The function should return a data frame where the first column is the name of the file and the second column is the number of complete cases. A prototype of this function follows
 
 ```{r}
-completer <- function(directory, id = 1:332) {
+complete <- function(directory, id = 1:332) {
     # 'directory' is character vector of length 1 
     # indicating the location of the csv file.
     
@@ -99,13 +99,13 @@ completer <- function(directory, id = 1:332) {
     # ...
     # where 'id' is the monitor number and 'nobs' is the
     # number of complete cases
-    fileList <- list.files(path = directory, pattern = ".csv", full.names = TRUE)
+    fileList <- list.files(path = directory, pattern =".csv", full.names = TRUE)
     
-    container <- numeric()
+    nobs <- numeric()
     
     for (i in id){
-        specdata <- read.csv(fileList[i])
-        container <- c(specdata, sum(complete.cases(specdata)))
+        data <- read.csv(fileList[i])
+        nobs <- c(nobs, sum(complete.cases(data)))
     }
     
     data.frame(id, nobs)
@@ -114,14 +114,14 @@ completer <- function(directory, id = 1:332) {
 
 Output examples:
 ```{r}
-completer("./specdata/", 1)
+complete("specdata", 1)
 
 ##   id nobs
 ## 1  1  117
 ```
 
 ```{r}
-#complete("specdata", c(2, 4, 8, 10, 12))
+complete("specdata", c(2, 4, 8, 10, 12))
 
 ##   id nobs
 ## 1  2 1041
@@ -132,7 +132,7 @@ completer("./specdata/", 1)
 ```
 
 ```{r}
-#complete("specdata", 50:60)
+complete("specdata", 50:60)
 
 ##   id nobs
 ## 1  50  459
@@ -153,18 +153,26 @@ completer("./specdata/", 1)
 Write a function that takes a directory of data files and a threshold for complete cases and calculates the correlation between sulfate and nitrate for monitor locations where the number of completely observed cases (on all variables) is greater than the threshold. The function should return a vector of correlations for the monitors that meet the threshold requirement. If no monitors meet the threshold requirement, then the function should return a numeric vector of length 0. A prototype of this function follows
 
 ```{r}
+
+require(data.table)
+
+#solution without loops
 corr <- function(directory, threshold = 0) {
-    # 'directory' is character vector of length 1 
-    # indicating the location of the csv file.
-    
-    # 'threshold' is numeric vector of length 1 indicating
-    # the number of completely observed observations (on all
-    # variables) required to compute the correlation between
-    # nitrate and sulfate; the default is 0
-    
-    # Return a numeric vector of correlations
-    # NOTE: do not round the result!
+   
+      # build a large data.table with the data from files
+      fileList <- lapply(file.path(directory, list.files(path = directory, pattern="*.csv")), data.table::fread)
+      data <- rbindlist(fileList)
+      
+      # keep only complete cases
+      data <- data[complete.cases(data),]
+      
+      # Apply threshold
+      data <- data[, .(nobs = .N, corr = cor(x = sulfate, y = nitrate)), by = ID][nobs > threshold]
+      return(data[, corr])
+
 }
+
+
 ```
 
 For this function you will need to use the 'cor' function in R which calculates the correlation between two vectors. Please read the help page for this function via '?cor' and make sure that you know how to use it.
@@ -172,9 +180,9 @@ For this function you will need to use the 'cor' function in R which calculates 
 Output examples:
 
 ```{r}
-#cr <- corr("specdata", 150)
+cr <- corr("specdata", 150)
 
-#head(cr); summary(cr)
+head(cr); summary(cr)
 
 ## [1] -0.01895754 -0.14051254 -0.04389737 -0.06815956 -0.12350667 -0.07588814
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
@@ -182,9 +190,9 @@ Output examples:
 ```
 
 ```{r}
-#cr <- corr("specdata", 400)
+cr <- corr("specdata", 400)
 
-#head(cr); summary(cr)
+head(cr); summary(cr)
 
 ## [1] -0.01895754 -0.04389737 -0.06815956 -0.07588814  0.76312884 -0.15782860
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
@@ -192,9 +200,9 @@ Output examples:
 ```
 
 ```{r}
-#cr <- corr("specdata", 5000)
+cr <- corr("specdata", 5000)
 
-#head(cr); summary(cr) ; length(cr)
+head(cr); summary(cr) ; length(cr)
 
 ## NULL
 ## Length  Class   Mode 
