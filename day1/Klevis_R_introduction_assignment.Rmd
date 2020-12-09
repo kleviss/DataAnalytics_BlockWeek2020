@@ -1,5 +1,5 @@
 ---
-    title: "R introduction assignment"
+title: "R introduction assignment"
 author: "Oleksii Yehorchenkov"
 date: "30 11 2020"
 output: html_document
@@ -41,12 +41,12 @@ data <- read.csv("./olympics.csv", skip = 1)
 
 names(data) <-c("Country", "Summer", "Gold", "Silver", "Bronze", "Total", "Winter", "Gold.1", "Silver.1", "Bronze.1", "Total.1", "Games", "Gold.2", "Silver.2", "Bronze.2", "Combined.total")
 
-data$Country
+#data$Country
 
 olympics<-data %>%
     separate(Country, c("Country", "ID"), "[(]") %>% mutate(ID=gsub("[)]","",ID))
 
-olympics$Country
+#olympics$Country
 ```
 
 ### Question 0 (example)
@@ -66,7 +66,7 @@ Which country has won the most gold medals in summer games?
 
 ```{r}
 question1 <- olympics$Country[which.max(olympics$Total[1:length(olympics$Gold)-1])]
-
+glimpse(question1)
 ```
 
 ### Question 2
@@ -77,6 +77,9 @@ Which country had the biggest difference between their summer and winter gold me
 
 ```{r}
 question2 <- olympics$Country[which.max(olympics$Gold[1:length(olympics$Gold)-1] - olympics$Gold.1[1:length(olympics$Gold.1)-1])]
+
+glimpse(question2)
+
 
 ```
 
@@ -100,6 +103,8 @@ question3_1 <- olympics %>% filter(Gold > 0 & Gold.1 > 0)
 ```{r}
 question3 <- question3_1$Country[which.max((question3_1$Gold - question3_1$Gold.1)/question3_1$Gold.2)]
 
+glimpse(question3)
+
 ```
 
 ### Question 4
@@ -111,6 +116,8 @@ Write a function that creates a Series called "Points" which is a weighted value
 ```{r}
 question4_1 <- mutate(olympics,Points=Gold.2*3+Silver.2*2+Bronze.2*1)
 question4 <- data.frame(question4_1$Country,question4_1$Points)
+
+glimpse(question4)
 ```
 
 ## Part 2
@@ -192,4 +199,6 @@ q8 <- q8%>%filter(REGION == 2 | REGION == 1)
 q8 <- q8%>%filter(startsWith(CTYNAME, "Washington"))
 q8 <- q8%>%filter(POPESTIMATE2015 > POPESTIMATE2014)
 q8 <- q8%>%select(STNAME, CTYNAME)
+
+glimpse(q8)
 ```
