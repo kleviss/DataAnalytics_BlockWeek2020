@@ -1,0 +1,385 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Getting and Cleaning Data assignment},
+  pdfauthor={Oleksii Yehorchenkov},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Getting and Cleaning Data assignment}
+\author{Oleksii Yehorchenkov}
+\date{10 12 2020}
+
+\begin{document}
+\maketitle
+
+This assignment is based on materials from Coursera course
+\href{https://www.coursera.org/learn/exploratory-data-analysis/home/welcome}{Exploratory
+Data Analysis}
+
+\hypertarget{introduction}{%
+\subsection{Introduction}\label{introduction}}
+
+Fine particulate matter (PM2.5) is an ambient air pollutant for which
+there is strong evidence that it is harmful to human health. In the
+United States, the Environmental Protection Agency (EPA) is tasked with
+setting national ambient air quality standards for fine PM and for
+tracking the emissions of this pollutant into the atmosphere.
+Approximatly every 3 years, the EPA releases its database on emissions
+of PM2.5. This database is known as the National Emissions Inventory
+(NEI). You can read more information about the NEI at the EPA National
+Emissions Inventory web site.
+
+For each year and for each type of PM source, the NEI records how many
+tons of PM2.5 were emitted from that source over the course of the
+entire year. The data that you will use for this assignment are for
+1999, 2002, 2005, and 2008.
+
+\hypertarget{data}{%
+\subsection{Data}\label{data}}
+
+The data for this assignment could be downloaded by the
+\href{https://www.dropbox.com/s/fey54ngk8g4z6rr/exdata_data_NEI_data.zip?dl=0}{link}:
+
+The zip file contains two files:
+
+\textbf{PM2.5 Emissions Data} (\texttt{summarySCC\_PM25.rds}): This file
+contains a data frame with all of the PM2.5 emissions data for 1999,
+2002, 2005, and 2008. For each year, the table contains number of tons
+of PM2.5 emitted from a specific type of source for the entire year.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{fips}: A five-digit number (represented as a string)
+  indicating the U.S. county
+\item
+  \textbf{SCC}: The name of the source as indicated by a digit string
+  (see source code classification table)
+\item
+  \textbf{Pollutant}: A string indicating the pollutant
+\item
+  \textbf{Emissions}: Amount of PM2.5 emitted, in tons
+\item
+  \textbf{type}: The type of source (point, non-point, on-road, or
+  non-road)
+\item
+  \textbf{year}: The year of emissions recorded
+\end{itemize}
+
+\textbf{Source Classification Code Table}
+(\texttt{Source\_Classification\_Code.rds}): This table provides a
+mapping from the SCC digit strings in the Emissions table to the actual
+name of the PM2.5 source. The sources are categorized in a few different
+ways from more general to more specific and you may choose to explore
+whatever categories you think are most useful. For example, source
+``10100101'' is known as ``Ext Comb /Electric Gen /Anthracite Coal
+/Pulverized Coal''.
+
+You can read each of the two files using the \texttt{readRDS()} function
+in R. For example, reading in each file can be done with the following
+code:
+
+\begin{verbatim}
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+\end{verbatim}
+
+\hypertarget{questions}{%
+\subsection{Questions}\label{questions}}
+
+You must address the following questions and tasks in your exploratory
+analysis. For each question/task you will need to make a single
+\textbf{bar} plot. You can use any plotting system in R to make your
+plot.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Have total emissions from PM2.5 decreased in the United States from
+  1999 to 2008? Make a plot showing the \textbf{total} PM2.5 emission
+  from all sources for each of the years 1999, 2002, 2005, and 2008.
+\item
+  Have total emissions from PM2.5 decreased in the \textbf{Baltimore
+  City}, Maryland (\texttt{fips\ ==\ "24510"}) from 1999 to 2008?
+\item
+  Of the four types of sources indicated by the \texttt{type} (point,
+  nonpoint, onroad, nonroad) variable, which of these four sources have
+  seen decreases in emissions from 1999--2008 for \textbf{Baltimore
+  City}? Which have seen increases in emissions from 1999--2008?
+\item
+  Across the United States, how have emissions from coal
+  combustion-related sources changed from 1999--2008?
+\item
+  How have emissions from motor vehicle sources changed from 1999--2008
+  in \textbf{Baltimore City} (EI.Sector starts from ``Mobile'')?
+\item
+  Compare emissions from motor vehicle sources in Baltimore City with
+  emissions from motor vehicle sources in \textbf{Los Angeles County},
+  California (\texttt{fips\ ==\ "06037"}). Which city has seen greater
+  changes over time in motor vehicle emissions?
+\end{enumerate}
+
+\#1. Have total emissions from PM2.5 decreased in the United States from
+1999 to 2008? Make a plot showing the \textbf{total} PM2.5 emission from
+all sources for each of the years 1999, 2002, 2005, and 2008.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## read in emissions data and classification code}
+\NormalTok{emissions_data <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"summarySCC_PM25.rds"}\NormalTok{)}
+\NormalTok{class_code <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"Source_Classification_Code.rds"}\NormalTok{)}
+
+\CommentTok{## add up the total emissions for each year}
+\NormalTok{sum_by_year <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(emissions_data}\OperatorTok{$}\NormalTok{Emissions, }\DataTypeTok{by=}\KeywordTok{list}\NormalTok{(}\DataTypeTok{year=}\NormalTok{emissions_data}\OperatorTok{$}\NormalTok{year), }\DataTypeTok{FUN=}\NormalTok{sum)}
+
+\CommentTok{## create the plot}
+\KeywordTok{png}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"plot1.png"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(sum_by_year}\OperatorTok{$}\NormalTok{year, sum_by_year}\OperatorTok{$}\NormalTok{x, }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \DataTypeTok{main =} \StringTok{"Total Emissions of PM2.5 in Baltimore City"}\NormalTok{,}
+     \DataTypeTok{ylab =} \StringTok{"Total emissions of PM2.5 (tons)"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"Year"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Have total emissions from PM2.5 decreased in the \textbf{Baltimore
+  City}, Maryland (\texttt{fips\ ==\ "24510"}) from 1999 to 2008?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## subset to just data from Baltimore and then add up emissions for each year}
+\NormalTok{baltimore_data <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(emissions_data, emissions_data}\OperatorTok{$}\NormalTok{fips}\OperatorTok{==}\StringTok{"24510"}\NormalTok{)}
+\NormalTok{baltimore_data_year <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(baltimore_data}\OperatorTok{$}\NormalTok{Emissions, }\DataTypeTok{by=}\KeywordTok{list}\NormalTok{(baltimore_data}\OperatorTok{$}\NormalTok{year), }
+                                   \DataTypeTok{FUN=}\NormalTok{sum)}
+\CommentTok{## create plot}
+\KeywordTok{png}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"plot2.png"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(baltimore_data_year}\OperatorTok{$}\NormalTok{Group}\FloatTok{.1}\NormalTok{, baltimore_data_year}\OperatorTok{$}\NormalTok{x, }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{, }
+     \DataTypeTok{main =} \StringTok{"Total Emissions of PM2.5 in Baltimore City"}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"year"}\NormalTok{, }
+     \DataTypeTok{ylab =} \StringTok{"Total Emissions (tons)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Of the four types of sources indicated by the \texttt{type} (point,
+  nonpoint, onroad, nonroad) variable, which of these four sources have
+  seen decreases in emissions from 1999--2008 for \textbf{Baltimore
+  City}? Which have seen increases in emissions from 1999--2008?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## subset to just data from Baltimore and sum up emissions by variable "type"}
+\NormalTok{baltimore_data <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(emissions_data, emissions_data}\OperatorTok{$}\NormalTok{fips}\OperatorTok{==}\StringTok{"24510"}\NormalTok{)}
+\NormalTok{baltimore_type_year <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(baltimore_data}\OperatorTok{$}\NormalTok{Emissions, }
+                                 \DataTypeTok{by=}\KeywordTok{list}\NormalTok{(baltimore_data}\OperatorTok{$}\NormalTok{type, baltimore_data}\OperatorTok{$}\NormalTok{year), }
+                                 \DataTypeTok{FUN=}\NormalTok{sum)}
+\KeywordTok{colnames}\NormalTok{(baltimore_type_year) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Type"}\NormalTok{, }\StringTok{"Year"}\NormalTok{, }\StringTok{"Emissions"}\NormalTok{)}
+
+\CommentTok{## create plot with ggplot2}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{png}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"plot3.png"}\NormalTok{)}
+\KeywordTok{qplot}\NormalTok{(Year, Emissions, }\DataTypeTok{data =}\NormalTok{ baltimore_type_year, }\DataTypeTok{color =}\NormalTok{ Type, }\DataTypeTok{geom =} \StringTok{"line"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Total Emissions of PM2.5 in Baltimore City By pollutant type"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Total Emissions (tons)"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Year"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Across the United States, how have emissions from coal
+  combustion-related sources changed from 1999--2008?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## fetch all records involving coal}
+\NormalTok{coal_class_code <-}\StringTok{ }\NormalTok{class_code[}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Coal"}\NormalTok{, class_code}\OperatorTok{$}\NormalTok{Short.Name), ]}
+\NormalTok{coal_emissions_data <-}\StringTok{ }\NormalTok{emissions_data[emissions_data}\OperatorTok{$}\NormalTok{SCC }\OperatorTok{%in%}\StringTok{ }\NormalTok{coal_class_code}\OperatorTok{$}\NormalTok{SCC, ]}
+
+\CommentTok{## sum up emissions by year}
+\NormalTok{coal_emissions_year <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(coal_emissions_data}\OperatorTok{$}\NormalTok{Emissions, }
+                                 \DataTypeTok{by=}\KeywordTok{list}\NormalTok{(coal_emissions_data}\OperatorTok{$}\NormalTok{year), }\DataTypeTok{FUN=}\NormalTok{sum)}
+\KeywordTok{colnames}\NormalTok{(coal_emissions_year) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"emissions"}\NormalTok{)}
+
+\CommentTok{## create a plot showing coal related emissions across the US from 1999-2008}
+\KeywordTok{png}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"plot4.png"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(coal_emissions_year}\OperatorTok{$}\NormalTok{year, coal_emissions_year}\OperatorTok{$}\NormalTok{emissions, }\DataTypeTok{type =} \StringTok{"o"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"Year"}\NormalTok{,}
+     \DataTypeTok{ylab =} \StringTok{"Total Emissions (tons)"}\NormalTok{,}
+     \DataTypeTok{main =} \StringTok{"Coal Related Emissions of PM2.5 in US from 1999-2008"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  How have emissions from motor vehicle sources changed from 1999--2008
+  in \textbf{Baltimore City} (EI.Sector starts from ``Mobile'')?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## subset data from Baltimore City from type "on road"}
+\NormalTok{baltimore_car_data <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(emissions_data, emissions_data}\OperatorTok{$}\NormalTok{fips}\OperatorTok{==}\StringTok{"24510"} 
+                         \OperatorTok{&}\StringTok{ }\NormalTok{emissions_data}\OperatorTok{$}\NormalTok{type}\OperatorTok{==}\StringTok{"ON-ROAD"}\NormalTok{)}
+\NormalTok{baltimore_car_year <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(baltimore_car_data}\OperatorTok{$}\NormalTok{Emissions, }
+                                \DataTypeTok{by=}\KeywordTok{list}\NormalTok{(baltimore_car_data}\OperatorTok{$}\NormalTok{year), }\DataTypeTok{FUN=}\NormalTok{sum)}
+\KeywordTok{colnames}\NormalTok{(baltimore_car_year) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Emissions"}\NormalTok{)}
+
+\CommentTok{## create plot showing car related emissions in Baltimore City from 1999-2008}
+\KeywordTok{png}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"plot5.png"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(baltimore_car_year}\OperatorTok{$}\NormalTok{Year, baltimore_car_year}\OperatorTok{$}\NormalTok{Emissions,}
+     \DataTypeTok{type =} \StringTok{"o"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"year"}\NormalTok{,}
+     \DataTypeTok{ylab =} \StringTok{"Total Emissions (tons)"}\NormalTok{,}
+     \DataTypeTok{main =} \StringTok{"Total Emissions of PM2.5 related to motor Vehicles"}\NormalTok{,}
+     \DataTypeTok{sub =} \StringTok{"Baltimore City"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Compare emissions from motor vehicle sources in Baltimore City with
+  emissions from motor vehicle sources in \textbf{Los Angeles County},
+  California (\texttt{fips\ ==\ "06037"}). Which city has seen greater
+  changes over time in motor vehicle emissions?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## subset data from Baltimore City, LA county and from type "on road"}
+\NormalTok{baltLA_car_data <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(emissions_data, emissions_data}\OperatorTok{$}\NormalTok{fips}\OperatorTok{==}\StringTok{"24510"} \OperatorTok{|}
+\StringTok{                                  }\NormalTok{emissions_data}\OperatorTok{$}\NormalTok{fips}\OperatorTok{==}\StringTok{"06037"} \OperatorTok{&}
+\StringTok{                                  }\NormalTok{emissions_data}\OperatorTok{$}\NormalTok{type}\OperatorTok{==}\StringTok{"ON-ROAD"}\NormalTok{)}
+\NormalTok{baltLA_car_year <-}\StringTok{ }\KeywordTok{aggregate}\NormalTok{(baltLA_car_data}\OperatorTok{$}\NormalTok{Emissions, }
+                             \DataTypeTok{by=}\KeywordTok{list}\NormalTok{(baltLA_car_data}\OperatorTok{$}\NormalTok{fips, baltLA_car_data}\OperatorTok{$}\NormalTok{year),}
+                             \DataTypeTok{FUN=}\NormalTok{sum)}
+\KeywordTok{colnames}\NormalTok{(baltLA_car_year) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"City"}\NormalTok{, }\StringTok{"Year"}\NormalTok{, }\StringTok{"Emissions"}\NormalTok{)}
+
+\CommentTok{## create plot comparing emissions from motor vehicles in Baltimore and LA from 1999-2008}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{png}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"plot6.png"}\NormalTok{)}
+\KeywordTok{qplot}\NormalTok{(Year, Emissions, }\DataTypeTok{data =}\NormalTok{ baltLA_car_year, }\DataTypeTok{color =}\NormalTok{ City, }\DataTypeTok{geom =} \StringTok{"line"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Emissions of PM2.5 in Baltimore City (24510) and LA County (06037)"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Total Emissions from motor vehicles (tons)"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Year"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}
