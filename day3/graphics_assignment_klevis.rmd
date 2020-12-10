@@ -97,6 +97,7 @@ library(ggplot2)
 png(filename = "plot3.png")
 qplot(Year, Emissions, data = baltimore_type_year, color = Type, geom = "line") +
         ggtitle("Total Emissions of PM2.5 in Baltimore City By pollutant type") + 
+        geom_bar(stat = "identity") +
         ylab("Total Emissions (tons)") + 
         xlab("Year") 
 
@@ -158,6 +159,7 @@ png(filename = "plot6.png")
 qplot(Year, Emissions, data = baltLA_car_year, color = City, geom = "line") +
         ggtitle("Emissions of PM2.5 in Baltimore City (24510) and LA County (06037)") + 
         ylab("Total Emissions from motor vehicles (tons)") + 
+        geom_bar(stat = "identity") +
         xlab("Year") 
 
 ```
