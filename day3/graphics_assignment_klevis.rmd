@@ -1,0 +1,161 @@
+---
+title: "Getting and Cleaning Data assignment"
+author: "Oleksii Yehorchenkov"
+student: "Klevis Xhyra"
+date: "10 12 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+This assignment is based on materials from Coursera course [Exploratory Data Analysis](https://www.coursera.org/learn/exploratory-data-analysis/home/welcome)
+
+## Introduction
+
+Fine particulate matter (PM2.5) is an ambient air pollutant for which there is strong evidence that it is harmful to human health. In the United States, the Environmental Protection Agency (EPA) is tasked with setting national ambient air quality standards for fine PM and for tracking the emissions of this pollutant into the atmosphere. Approximatly every 3 years, the EPA releases its database on emissions of PM2.5. This database is known as the National Emissions Inventory (NEI). You can read more information about the NEI at the EPA National Emissions Inventory web site.
+
+For each year and for each type of PM source, the NEI records how many tons of PM2.5 were emitted from that source over the course of the entire year. The data that you will use for this assignment are for 1999, 2002, 2005, and 2008.
+
+## Data
+
+The data for this assignment could be downloaded by the [link](https://www.dropbox.com/s/fey54ngk8g4z6rr/exdata_data_NEI_data.zip?dl=0):
+
+The zip file contains two files:
+
+**PM2.5 Emissions Data** (`summarySCC_PM25.rds`): This file contains a data frame with all of the PM2.5 emissions data for 1999, 2002, 2005, and 2008. For each year, the table contains number of tons of PM2.5 emitted from a specific type of source for the entire year.
+
+- **fips**: A five-digit number (represented as a string) indicating the U.S. county
+- **SCC**: The name of the source as indicated by a digit string (see source code classification table)
+- **Pollutant**: A string indicating the pollutant
+- **Emissions**: Amount of PM2.5 emitted, in tons
+- **type**: The type of source (point, non-point, on-road, or non-road)
+- **year**: The year of emissions recorded
+
+**Source Classification Code Table** (`Source_Classification_Code.rds`): This table provides a mapping from the SCC digit strings in the Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source “10100101” is known as “Ext Comb /Electric Gen /Anthracite Coal /Pulverized Coal”.
+
+You can read each of the two files using the `readRDS()` function in R. For example, reading in each file can be done with the following code:
+
+```
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+```
+## Questions
+
+You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single **bar** plot. You can use any plotting system in R to make your plot.
+
+1. Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Make a plot showing the **total** PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
+2. Have total emissions from PM2.5 decreased in the **Baltimore City**, Maryland (`fips == "24510"`) from 1999 to 2008?
+3. Of the four types of sources indicated by the `type` (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for **Baltimore City**? Which have seen increases in emissions from 1999–2008?
+4. Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+5. How have emissions from motor vehicle sources changed from 1999–2008 in **Baltimore City** (EI.Sector starts from "Mobile")?
+6. Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in **Los Angeles County**, California (`fips == "06037"`). Which city has seen greater changes over time in motor vehicle emissions?
+
+
+#1. Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Make a plot showing the **total** PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
+
+```{r}
+## read in emissions data and classification code
+emissions_data <- readRDS("summarySCC_PM25.rds")
+class_code <- readRDS("Source_Classification_Code.rds")
+
+## add up the total emissions for each year
+sum_by_year <- aggregate(emissions_data$Emissions, by=list(year=emissions_data$year), FUN=sum)
+
+## create the plot
+png(filename = "plot1.png")
+plot(sum_by_year$year, sum_by_year$x, type = "l", 
+     main = "Total Emissions of PM2.5 in Baltimore City",
+     ylab = "Total emissions of PM2.5 (tons)",
+     xlab = "Year")
+```
+
+```{r}
+## subset to just data from Baltimore and then add up emissions for each year
+baltimore_data <- subset(emissions_data, emissions_data$fips=="24510")
+baltimore_data_year <- aggregate(baltimore_data$Emissions, by=list(baltimore_data$year), 
+                                   FUN=sum)
+## create plot
+png(filename = "plot2.png")
+plot(baltimore_data_year$Group.1, baltimore_data_year$x, type = "l", 
+     main = "Total Emissions of PM2.5 in Baltimore City", xlab = "year", 
+     ylab = "Total Emissions (tons)")
+```
+3. Of the four types of sources indicated by the `type` (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for **Baltimore City**? Which have seen increases in emissions from 1999–2008?
+
+```{r}
+## subset to just data from Baltimore and sum up emissions by variable "type"
+baltimore_data <- subset(emissions_data, emissions_data$fips=="24510")
+baltimore_type_year <- aggregate(baltimore_data$Emissions, 
+                                 by=list(baltimore_data$type, baltimore_data$year), 
+                                 FUN=sum)
+colnames(baltimore_type_year) <- c("Type", "Year", "Emissions")
+
+## create plot with ggplot2
+library(ggplot2)
+png(filename = "plot3.png")
+qplot(Year, Emissions, data = baltimore_type_year, color = Type, geom = "line") +
+        ggtitle("Total Emissions of PM2.5 in Baltimore City By pollutant type") + 
+        ylab("Total Emissions (tons)") + 
+        xlab("Year") 
+
+```
+4. Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+```{r}
+## fetch all records involving coal
+coal_class_code <- class_code[grepl("Coal", class_code$Short.Name), ]
+coal_emissions_data <- emissions_data[emissions_data$SCC %in% coal_class_code$SCC, ]
+
+## sum up emissions by year
+coal_emissions_year <- aggregate(coal_emissions_data$Emissions, 
+                                 by=list(coal_emissions_data$year), FUN=sum)
+colnames(coal_emissions_year) <- c("year", "emissions")
+
+## create a plot showing coal related emissions across the US from 1999-2008
+png(filename = "plot4.png")
+plot(coal_emissions_year$year, coal_emissions_year$emissions, type = "o",
+     xlab = "Year",
+     ylab = "Total Emissions (tons)",
+     main = "Coal Related Emissions of PM2.5 in US from 1999-2008")
+
+```
+5. How have emissions from motor vehicle sources changed from 1999–2008 in **Baltimore City** (EI.Sector starts from "Mobile")?
+```{r}
+## subset data from Baltimore City from type "on road"
+baltimore_car_data <- subset(emissions_data, emissions_data$fips=="24510" 
+                         & emissions_data$type=="ON-ROAD")
+baltimore_car_year <- aggregate(baltimore_car_data$Emissions, 
+                                by=list(baltimore_car_data$year), FUN=sum)
+colnames(baltimore_car_year) <- c("Year", "Emissions")
+
+## create plot showing car related emissions in Baltimore City from 1999-2008
+png(filename = "plot5.png")
+plot(baltimore_car_year$Year, baltimore_car_year$Emissions,
+     type = "o",
+     xlab = "year",
+     ylab = "Total Emissions (tons)",
+     main = "Total Emissions of PM2.5 related to motor Vehicles",
+     sub = "Baltimore City")
+```
+6. Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in **Los Angeles County**, California (`fips == "06037"`). Which city has seen greater changes over time in motor vehicle emissions?
+```{r}
+## subset data from Baltimore City, LA county and from type "on road"
+baltLA_car_data <- subset(emissions_data, emissions_data$fips=="24510" |
+                                  emissions_data$fips=="06037" &
+                                  emissions_data$type=="ON-ROAD")
+baltLA_car_year <- aggregate(baltLA_car_data$Emissions, 
+                             by=list(baltLA_car_data$fips, baltLA_car_data$year),
+                             FUN=sum)
+colnames(baltLA_car_year) <- c("City", "Year", "Emissions")
+
+## create plot comparing emissions from motor vehicles in Baltimore and LA from 1999-2008
+library(ggplot2)
+png(filename = "plot6.png")
+qplot(Year, Emissions, data = baltLA_car_year, color = City, geom = "line") +
+        ggtitle("Emissions of PM2.5 in Baltimore City (24510) and LA County (06037)") + 
+        ylab("Total Emissions from motor vehicles (tons)") + 
+        xlab("Year") 
+
+```
+
