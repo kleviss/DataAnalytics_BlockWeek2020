@@ -1,9 +1,10 @@
 ---
 title: "Machine learning assignment"
 author: "Oleksii Yehorchenkov"
-student: "Klevis Xhyra"
 date: "10 12 2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 This assignment is based on materials from Coursera course [Practical machine learning](https://www.coursera.org/learn/practical-machine-learning/home/welcome)
-
+Student: "Klevis Xhyra"
 ## Background
 
 Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
@@ -37,11 +38,8 @@ Also you should explain how do you deal with NA's values and investigate correla
 You repository for this assignment should consist of R markdown file, compiled html file and prediction.csv file with data from pml-testing.csv and 'classe' column with predictions for 20 observation.
 
 
-
-##Install packages and load the required libraries
-
 ```{r} 
-#load libraries and data
+#Installing packages and load the required libraries
 library(data.table);
 library(caret); 
 library(mlr);
@@ -53,41 +51,41 @@ library(rpart.plot);
 
 set.seed(1234)
 
-# data load and clean up
+# kiading and cleaning data from csv files
 TRNG_SET <- read.csv("pml-training.csv", na.strings=c("NA","#DIV/0!", ""))
 TST_SET <- read.csv("pml-testing.csv", na.strings=c("NA","#DIV/0!", ""))
 
 
-# Delete columns with all missing values
+# remove all missing NA values
 TRNG_SET<-TRNG_SET[,colSums(is.na(TRNG_SET)) == 0]
 TST_SET <-TST_SET[,colSums(is.na(TST_SET)) == 0]
 
-# Delete variables are irrelevant to current project 
+# deleting the irrelevant values
 TRNG_SET   <-TRNG_SET[,-c(1:7)]
 TST_SET <-TST_SET[,-c(1:7)]
 
-# partition the data so that 75% of the training dataset into training and the remaining 25% to testing
+# 75% data for training dataset 25% to testing
 TRN_TRNG_SET <- createDataPartition(y=TRNG_SET$classe, p=0.75, list=FALSE)
 TrainTRNG_SET <- TRNG_SET[TRN_TRNG_SET, ] 
 TestTRNG_SET <- TRNG_SET[-TRN_TRNG_SET, ]
 
 ```
 
-#Prediction model 1 using Decision Tree
+Prediction model 1 using Decision Tree
 
 ```{r}
 MODEL_1 <- rpart(classe ~ ., data=TrainTRNG_SET, method="class")
 
 PRED_1 <- predict(MODEL_1, TestTRNG_SET, type = "class")
 
-# Plot the Decision Tree
+# Ploting Decision Tree
 rpart.plot(MODEL_1, main="Classification Tree", extra=102, under=TRUE, faclen=0)
 
-# Test results on our TestTRNG_SET data set:
+# Test results on TestTRNG_SET data set:
 confusionMatrix(PRED_1, as.factor(TestTRNG_SET$classe))
 ```
 
-#Prediction model usiing Random Forest
+Prediction model using Random Forest
 
 ```{r}
 MODEL_2 <- randomForest(as.factor(classe) ~. , data=TrainTRNG_SET, method="class")
@@ -99,9 +97,8 @@ PRED_2 <- predict(MODEL_2, TestTRNG_SET, type = "class")
 confusionMatrix(table(PRED_2, TestTRNG_SET$classe))
 ```
 
-
+Generate CSVs
 ```{r}
-#Generate CSV
 PRED_DecisionTrees <- data.frame(Id = 1:length(PRED_1), PRED_1)
 write.csv(PRED_DecisionTrees, file = "PRED_DecisionTrees.csv", row.names = F)
 
