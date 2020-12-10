@@ -464,16 +464,16 @@ olympics&lt;-data %&gt;%
 <div id="question-0-example" class="section level3">
 <h3>Question 0 (example)</h3>
 <p>What is the first country in df? <em>Script should return a single string value.</em></p>
-<pre class="r"><code>olympics$Country[1]</code></pre>
-<pre><code>## [1] &quot;AfghanistanÂ &quot;</code></pre>
+<pre class="r"><code>substr(olympics$Country[1] ,1,nchar(olympics$Country[1])-2)</code></pre>
+<pre><code>## [1] &quot;Afghanistan&quot;</code></pre>
 </div>
 <div id="question-1" class="section level3">
 <h3>Question 1</h3>
 <p>Which country has won the most gold medals in summer games?</p>
 <p><em>Script should return a single string value.</em></p>
 <pre class="r"><code>question1 &lt;- olympics$Country[which.max(olympics$Total[1:length(olympics$Gold)-1])]
-glimpse(question1)</code></pre>
-<pre><code>##  chr &quot;United StatesÂ &quot;</code></pre>
+print(substr(question1 ,1,nchar(question1)-2))</code></pre>
+<pre><code>## [1] &quot;United States&quot;</code></pre>
 </div>
 <div id="question-2" class="section level3">
 <h3>Question 2</h3>
@@ -481,8 +481,8 @@ glimpse(question1)</code></pre>
 <p><em>Script should return a single string value.</em></p>
 <pre class="r"><code>question2 &lt;- olympics$Country[which.max(olympics$Gold[1:length(olympics$Gold)-1] - olympics$Gold.1[1:length(olympics$Gold.1)-1])]
 
-glimpse(question2)</code></pre>
-<pre><code>##  chr &quot;United StatesÂ &quot;</code></pre>
+print(substr(question2 ,1,nchar(question2)-2))</code></pre>
+<pre><code>## [1] &quot;United States&quot;</code></pre>
 </div>
 <div id="question-3" class="section level3">
 <h3>Question 3</h3>
@@ -498,20 +498,165 @@ glimpse(question2)</code></pre>
 <p>#over total</p>
 <pre class="r"><code>question3 &lt;- question3_1$Country[which.max((question3_1$Gold - question3_1$Gold.1)/question3_1$Gold.2)]
 
-glimpse(question3)</code></pre>
-<pre><code>##  chr &quot;BulgariaÂ &quot;</code></pre>
+print(substr(question3 ,1,nchar(question3)-2))</code></pre>
+<pre><code>## [1] &quot;Bulgaria&quot;</code></pre>
 <div id="question-4" class="section level3">
 <h3>Question 4</h3>
 <p>Write a function that creates a Series called “Points” which is a weighted value where each gold medal (<code>Gold.2</code>) counts for 3 points, silver medals (<code>Silver.2</code>) for 2 points, and bronze medals (<code>Bronze.2</code>) for 1 point.</p>
 <p><em>Script should return a data frame of length 146 with 2 columns named “Country and”Points&quot;</em></p>
 <pre class="r"><code>question4_1 &lt;- mutate(olympics,Points=Gold.2*3+Silver.2*2+Bronze.2*1)
-question4 &lt;- data.frame(question4_1$Country,question4_1$Points)
+df &lt;- data.frame(question4_1$Country,question4_1$Points)
 
-glimpse(question4)</code></pre>
-<pre><code>## Rows: 147
-## Columns: 2
-## $ question4_1.Country &lt;chr&gt; &quot;AfghanistanÂ &quot;, &quot;AlgeriaÂ &quot;, &quot;ArgentinaÂ &quot;, &quot;A...
-## $ question4_1.Points  &lt;dbl&gt; 2, 27, 130, 16, 22, 923, 569, 43, 24, 1, 1, 154...</code></pre>
+names(df) &lt;-c(&quot;Country&quot;, &quot;Points&quot;)
+print(df)</code></pre>
+<pre><code>##                                Country Points
+## 1                        AfghanistanÂ       2
+## 2                            AlgeriaÂ      27
+## 3                          ArgentinaÂ     130
+## 4                            ArmeniaÂ      16
+## 5                        AustralasiaÂ      22
+## 6                          AustraliaÂ     923
+## 7                            AustriaÂ     569
+## 8                         AzerbaijanÂ      43
+## 9                            BahamasÂ      24
+## 10                           BahrainÂ       1
+## 11                          BarbadosÂ       1
+## 12                           BelarusÂ     154
+## 13                           BelgiumÂ     276
+## 14                           BermudaÂ       1
+## 15                           BohemiaÂ       5
+## 16                          BotswanaÂ       2
+## 17                            BrazilÂ     184
+## 18               British West IndiesÂ       2
+## 19                          BulgariaÂ     411
+## 20                           BurundiÂ       3
+## 21                          CameroonÂ      12
+## 22                            CanadaÂ     846
+## 23                             ChileÂ      24
+## 24                             ChinaÂ    1120
+## 25                          ColombiaÂ      29
+## 26                        Costa RicaÂ       7
+## 27                       Ivory CoastÂ       2
+## 28                           CroatiaÂ      67
+## 29                              CubaÂ     420
+## 30                            CyprusÂ       2
+## 31                    Czech RepublicÂ     134
+## 32                    CzechoslovakiaÂ     327
+## 33                           DenmarkÂ     335
+## 34                          DjiboutiÂ       1
+## 35                Dominican RepublicÂ      14
+## 36                           EcuadorÂ       5
+## 37                             EgyptÂ      49
+## 38                           EritreaÂ       1
+## 39                           EstoniaÂ      77
+## 40                          EthiopiaÂ      94
+## 41                           FinlandÂ     895
+## 42                            FranceÂ    1500
+## 43                             GabonÂ       2
+## 44                           GeorgiaÂ      42
+## 45                           GermanyÂ    1546
+## 46            United Team of GermanyÂ     269
+## 47                      East GermanyÂ    1068
+## 48                      West GermanyÂ     459
+## 49                             GhanaÂ       5
+## 50                     Great BritainÂ    1574
+## 51                            GreeceÂ     213
+## 52                           GrenadaÂ       3
+## 53                         GuatemalaÂ       2
+## 54                            GuyanaÂ       1
+## 55                             HaitiÂ       3
+## 56                         Hong KongÂ       6
+## 57                           HungaryÂ     962
+## 58                           IcelandÂ       6
+## 59                             IndiaÂ      50
+## 60                         IndonesiaÂ      49
+## 61                              IranÂ     110
+## 62                              IraqÂ       1
+## 63                           IrelandÂ      55
+## 64                            IsraelÂ      10
+## 65                             ItalyÂ    1333
+## 66                           JamaicaÂ     131
+## 67                             JapanÂ     866
+## 68                        KazakhstanÂ     113
+## 69                             KenyaÂ     168
+## 70                       North KoreaÂ      90
+## 71                       South KoreaÂ     609
+## 72                            KuwaitÂ       2
+## 73                        KyrgyzstanÂ       4
+## 74                            LatviaÂ      47
+## 75                           LebanonÂ       6
+## 76                     LiechtensteinÂ      15
+## 77                         LithuaniaÂ      38
+## 78                        LuxembourgÂ       9
+## 79                         MacedoniaÂ       1
+## 80                          MalaysiaÂ       9
+## 81                         MauritiusÂ       1
+## 82                            MexicoÂ     109
+## 83                           MoldovaÂ       9
+## 84                          MongoliaÂ      37
+## 85                        MontenegroÂ       2
+## 86                           MoroccoÂ      39
+## 87                        MozambiqueÂ       4
+## 88                           NamibiaÂ       8
+## 89                       NetherlandsÂ     727
+## 90              Netherlands AntillesÂ       2
+## 91                       New ZealandÂ     203
+## 92                             NigerÂ       1
+## 93                           NigeriaÂ      37
+## 94                            NorwayÂ     985
+## 95                          PakistanÂ      19
+## 96                            PanamaÂ       5
+## 97                          ParaguayÂ       2
+## 98                              PeruÂ       9
+## 99                       PhilippinesÂ      11
+## 100                           PolandÂ     520
+## 101                         PortugalÂ      39
+## 102                      Puerto RicoÂ      10
+## 103                            QatarÂ       4
+## 104                          RomaniaÂ     572
+## 105                           RussiaÂ    1042
+## 106                   Russian EmpireÂ      14
+## 107                     Soviet UnionÂ    2526
+## 108                     Unified TeamÂ     287
+## 109                     Saudi ArabiaÂ       4
+## 110                          SenegalÂ       2
+## 111                           SerbiaÂ      11
+## 112            Serbia and MontenegroÂ      17
+## 113                        SingaporeÂ       6
+## 114                         SlovakiaÂ      58
+## 115                         SloveniaÂ      56
+## 116                     South AfricaÂ     148
+## 117                            SpainÂ     268
+## 118                        Sri LankaÂ       4
+## 119                            SudanÂ       2
+## 120                         SurinameÂ       4
+## 121                           SwedenÂ    1217
+## 122                      SwitzerlandÂ     630
+## 123                            SyriaÂ       6
+## 124                   Chinese TaipeiÂ      32
+## 125                       TajikistanÂ       4
+## 126                         TanzaniaÂ       4
+## 127                         ThailandÂ      44
+## 128                             TogoÂ       1
+## 129                            TongaÂ       2
+## 130              Trinidad and TobagoÂ      27
+## 131                          TunisiaÂ      19
+## 132                           TurkeyÂ     191
+## 133                           UgandaÂ      14
+## 134                          UkraineÂ     220
+## 135             United Arab EmiratesÂ       3
+## 136                    United StatesÂ    5684
+## 137                          UruguayÂ      16
+## 138                       UzbekistanÂ      38
+## 139                        VenezuelaÂ      18
+## 140                          VietnamÂ       4
+## 141                   Virgin IslandsÂ       2
+## 142                       YugoslaviaÂ     171
+## 143 Independent Olympic ParticipantsÂ       4
+## 144                           ZambiaÂ       3
+## 145                         ZimbabweÂ      18
+## 146                       Mixed teamÂ      38
+## 147                             Totals  34848</code></pre>
 </div>
 <div id="part-2" class="section level2">
 <h2>Part 2</h2>
@@ -543,12 +688,20 @@ print(q5_answer)</code></pre>
 <p>Only looking at the three most populous counties for each state, what are the three most populous states (in order of highest population to lowest population)? Use <code>CENSUS2010POP</code>.</p>
 <p><em>Script should return a vector of string values.</em></p>
 <pre><code>```r
-q6 &lt;- order(census$CENSUS2010POP, decreasing=TRUE)[1:3]
-census$STNAME[q6]
+#q6 &lt;- order(census$CENSUS2010POP, decreasing=TRUE)[1:3]
+#census$STNAME[q6]
+
+q6 &lt;- census[order(-census$CENSUS2010POP)[1:3],6]
+print(q6)
 ```
 
 ```
-## [1] &quot;California&quot; &quot;Texas&quot;      &quot;New York&quot;
+## # A tibble: 3 x 1
+##   STNAME    
+##   &lt;chr&gt;     
+## 1 California
+## 2 Texas     
+## 3 New York
 ```</code></pre>
 </div>
 <div id="question-7" class="section level3">
@@ -575,11 +728,15 @@ q8 &lt;- q8%&gt;%filter(startsWith(CTYNAME, &quot;Washington&quot;))
 q8 &lt;- q8%&gt;%filter(POPESTIMATE2015 &gt; POPESTIMATE2014)
 q8 &lt;- q8%&gt;%select(STNAME, CTYNAME)
 
-glimpse(q8)</code></pre>
-<pre><code>## Rows: 5
-## Columns: 2
-## $ STNAME  &lt;chr&gt; &quot;Iowa&quot;, &quot;Minnesota&quot;, &quot;Pennsylvania&quot;, &quot;Rhode Island&quot;, &quot;Wisco...
-## $ CTYNAME &lt;chr&gt; &quot;Washington County&quot;, &quot;Washington County&quot;, &quot;Washington Count...</code></pre>
+(q8)</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   STNAME       CTYNAME          
+##   &lt;chr&gt;        &lt;chr&gt;            
+## 1 Iowa         Washington County
+## 2 Minnesota    Washington County
+## 3 Pennsylvania Washington County
+## 4 Rhode Island Washington County
+## 5 Wisconsin    Washington County</code></pre>
 </div>
 </div>
 </div>

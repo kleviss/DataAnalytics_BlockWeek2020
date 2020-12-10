@@ -118,11 +118,9 @@ Write a function that creates a Series called "Points" which is a weighted value
 question4_1 <- mutate(olympics,Points=Gold.2*3+Silver.2*2+Bronze.2*1)
 df <- data.frame(question4_1$Country,question4_1$Points)
 
-print(question4 %>% 
-  rename(
-    Country = question4_1.Country,
-    Points = question4_1.Points
-    ))
+names(df) <-c("Country", "Points")
+print(df)
+
 ```
 
 ## Part 2
@@ -171,7 +169,7 @@ Only looking at the three most populous counties for each state, what are the th
 #q6 <- order(census$CENSUS2010POP, decreasing=TRUE)[1:3]
 #census$STNAME[q6]
 
-q6 <- census[order(-census$CENSUS2010POP)[1:3],4:8]
+q6 <- census[order(-census$CENSUS2010POP)[1:3],6]
     print(q6)
 ```
 
@@ -208,5 +206,5 @@ q8 <- q8%>%filter(startsWith(CTYNAME, "Washington"))
 q8 <- q8%>%filter(POPESTIMATE2015 > POPESTIMATE2014)
 q8 <- q8%>%select(STNAME, CTYNAME)
 
-glimpse(q8)
+(q8)
 ```
