@@ -466,6 +466,9 @@ plot(sum_by_year$year, sum_by_year$x, type = &quot;l&quot;,
      main = &quot;Total Emissions of PM2.5 in Baltimore City&quot;,
      ylab = &quot;Total emissions of PM2.5 (tons)&quot;,
      xlab = &quot;Year&quot;)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Have total emissions from PM2.5 decreased in the <strong>Baltimore City</strong>, Maryland (<code>fips == &quot;24510&quot;</code>) from 1999 to 2008?</li>
+</ol>
 <pre class="r"><code>## subset to just data from Baltimore and then add up emissions for each year
 baltimore_data &lt;- subset(emissions_data, emissions_data$fips==&quot;24510&quot;)
 baltimore_data_year &lt;- aggregate(baltimore_data$Emissions, by=list(baltimore_data$year), 
