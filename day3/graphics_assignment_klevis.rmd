@@ -101,3 +101,64 @@ qplot(Year, Emissions, data = baltimore_type_year, color = Type, geom = "line") 
         xlab("Year") 
 
 ```
+
+4. Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+```{r}
+## fetch all records involving coal
+coal_class_code <- class_code[grepl("Coal", class_code$Short.Name), ]
+coal_emissions_data <- emissions_data[emissions_data$SCC %in% coal_class_code$SCC, ]
+
+## sum up emissions by year
+coal_emissions_year <- aggregate(coal_emissions_data$Emissions, 
+                                 by=list(coal_emissions_data$year), FUN=sum)
+colnames(coal_emissions_year) <- c("year", "emissions")
+
+## create a plot showing coal related emissions across the US from 1999-2008
+png(filename = "plot4.png")
+plot(coal_emissions_year$year, coal_emissions_year$emissions, type = "o",
+     xlab = "Year",
+     ylab = "Total Emissions (tons)",
+     main = "Coal Related Emissions of PM2.5 in US from 1999-2008")
+
+```
+
+5. How have emissions from motor vehicle sources changed from 1999–2008 in **Baltimore City** (EI.Sector starts from "Mobile")?
+```{r}
+## subset data from Baltimore City from type "on road"
+baltimore_car_data <- subset(emissions_data, emissions_data$fips=="24510" 
+                         & emissions_data$type=="ON-ROAD")
+baltimore_car_year <- aggregate(baltimore_car_data$Emissions, 
+                                by=list(baltimore_car_data$year), FUN=sum)
+colnames(baltimore_car_year) <- c("Year", "Emissions")
+
+## create plot showing car related emissions in Baltimore City from 1999-2008
+png(filename = "plot5.png")
+plot(baltimore_car_year$Year, baltimore_car_year$Emissions,
+     type = "o",
+     xlab = "year",
+     ylab = "Total Emissions (tons)",
+     main = "Total Emissions of PM2.5 related to motor Vehicles",
+     sub = "Baltimore City")
+```
+
+6. Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in **Los Angeles County**, California (`fips == "06037"`). Which city has seen greater changes over time in motor vehicle emissions?
+```{r}
+## subset data from Baltimore City, LA county and from type "on road"
+baltLA_car_data <- subset(emissions_data, emissions_data$fips=="24510" |
+                                  emissions_data$fips=="06037" &
+                                  emissions_data$type=="ON-ROAD")
+baltLA_car_year <- aggregate(baltLA_car_data$Emissions, 
+                             by=list(baltLA_car_data$fips, baltLA_car_data$year),
+                             FUN=sum)
+colnames(baltLA_car_year) <- c("City", "Year", "Emissions")
+
+## create plot comparing emissions from motor vehicles in Baltimore and LA from 1999-2008
+library(ggplot2)
+png(filename = "plot6.png")
+qplot(Year, Emissions, data = baltLA_car_year, color = City, geom = "line") +
+        ggtitle("Emissions of PM2.5 in Baltimore City (24510) and LA County (06037)") + 
+        ylab("Total Emissions from motor vehicles (tons)") + 
+        xlab("Year") 
+
+```
+
