@@ -54,50 +54,57 @@ library(rpart.plot);
 set.seed(1234)
 
 # data load and clean up
-trainingset <- read.csv("pml-training.csv", na.strings=c("NA","#DIV/0!", ""))
-testingset <- read.csv("pml-testing.csv", na.strings=c("NA","#DIV/0!", ""))
+TRNG_SET <- read.csv("pml-training.csv", na.strings=c("NA","#DIV/0!", ""))
+TST_SET <- read.csv("pml-testing.csv", na.strings=c("NA","#DIV/0!", ""))
 
 
 # Delete columns with all missing values
-trainingset<-trainingset[,colSums(is.na(trainingset)) == 0]
-testingset <-testingset[,colSums(is.na(testingset)) == 0]
+TRNG_SET<-TRNG_SET[,colSums(is.na(TRNG_SET)) == 0]
+TST_SET <-TST_SET[,colSums(is.na(TST_SET)) == 0]
 
 # Delete variables are irrelevant to current project 
-trainingset   <-trainingset[,-c(1:7)]
-testingset <-testingset[,-c(1:7)]
+TRNG_SET   <-TRNG_SET[,-c(1:7)]
+TST_SET <-TST_SET[,-c(1:7)]
 
 # partition the data so that 75% of the training dataset into training and the remaining 25% to testing
-traintrainset <- createDataPartition(y=trainingset$classe, p=0.75, list=FALSE)
-TrainTrainingSet <- trainingset[traintrainset, ] 
-TestTrainingSet <- trainingset[-traintrainset, ]
+TRN_TRNG_SET <- createDataPartition(y=TRNG_SET$classe, p=0.75, list=FALSE)
+TrainTRNG_SET <- TRNG_SET[TRN_TRNG_SET, ] 
+TestTRNG_SET <- TRNG_SET[-TRN_TRNG_SET, ]
 
 ```
 
 #Prediction model 1 using Decision Tree
 
 ```{r}
-model1 <- rpart(classe ~ ., data=TrainTrainingSet, method="class")
+MODEL_1 <- rpart(classe ~ ., data=TrainTRNG_SET, method="class")
 
-prediction1 <- predict(model1, TestTrainingSet, type = "class")
+PRED_1 <- predict(MODEL_1, TestTRNG_SET, type = "class")
 
 # Plot the Decision Tree
-rpart.plot(model1, main="Classification Tree", extra=102, under=TRUE, faclen=0)
+rpart.plot(MODEL_1, main="Classification Tree", extra=102, under=TRUE, faclen=0)
 
-# Test results on our TestTrainingSet data set:
-confusionMatrix(prediction1, as.factor(TestTrainingSet$classe))
+# Test results on our TestTRNG_SET data set:
+confusionMatrix(PRED_1, as.factor(TestTRNG_SET$classe))
 ```
 
 #Prediction model usiing Random Forest
 
 ```{r}
-
-model2 <- randomForest(classe ~., data=factor(TrainTrainingSet), method="class")
+MODEL_2 <- randomForest(as.factor(classe) ~. , data=TrainTRNG_SET, method="class")
 
 # Predicting:
-prediction2 <- predict(model2, TestTrainingSet, type = "class")
+PRED_2 <- predict(MODEL_2, TestTRNG_SET, type = "class")
 
-# Test results on TestTrainingSet data set:
-confusionMatrix(prediction2, TestTrainingSet$classe)
+# Test results on TestTRNG_SET data set:
+confusionMatrix(table(PRED_2, TestTRNG_SET$classe))
 ```
 
 
+```{r}
+#Generate CSV
+PRED_DecisionTrees <- data.frame(Id = 1:length(PRED_1), PRED_1)
+write.csv(PRED_DecisionTrees, file = "PRED_DecisionTrees.csv", row.names = F)
+
+PRED_RandomForests <- data.frame(Id = 1:length(PRED_2), PRED_2)
+write.csv(PRED_RandomForests, file = "PRED_RandomForests.csv", row.names = F)
+```
