@@ -37,3 +37,6 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Sensitive CSV Data
+team_case/Volkswohl_Bund_Daten/**
